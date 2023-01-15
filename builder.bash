@@ -29,20 +29,6 @@ generateDocs(){
 
 case $1 in
 
-	setup-repository )
-		git remote remove origin  && git remote add origin https://${REPO_TOKEN}@github.com/$REPO_URL.git
-		git checkout -b build_branch ${CURRENT_BRANCH}
-		echo "> Repository added, travisBranch=${CURRENT_BRANCH}"
-
-	;;
-
-	upload-release )
-
-		DESC=$(cat RELEASE-NOTES.md | awk 'BEGIN {RS="|"} {print substr($0, 0, index(substr($0, 3), "###"))}' | sed ':a;N;$!ba;s/\n/\\r\\n/g')
-		github-cli release mageddo dns-proxy-server $APP_VERSION $CURRENT_BRANCH "${DESC}" $PWD/build/*.tgz
-
-	;;
-
 	docs )
 
 	VERSION=$(cat VERSION | awk -F '.' '{ print $1"."$2}');
@@ -118,24 +104,18 @@ case $1 in
 	elif [ "$EC" -ne "0" ]; then
 		exit $EC
 	fi
-	docker-compose build prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64 &&\
-	echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&\
-	docker-compose push prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
+	docker-compose build prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
+# Comment out the push, we only want build for now
+#	docker-compose build prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64 &&\
+#	echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&\
+#	docker-compose push prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
 
 	;;
 
 	release )
 
-		echo "> build started, current branch=$CURRENT_BRANCH"
-		if [ "$CURRENT_BRANCH" = "master" ]; then
-			echo "> deploying new version"
-			builder.bash validate-release && builder.bash apply-version && builder.bash build && builder.bash upload-release
-
-		else
-			echo "> building candidate"
-			builder.bash validate-release
-			builder.bash build
-		fi
+		echo "> building new version"
+		builder.bash validate-release && builder.bash apply-version && builder.bash build
 
 	;;
 

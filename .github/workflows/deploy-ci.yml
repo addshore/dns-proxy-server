@@ -1,0 +1,15 @@
+name: Deploy CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  deploy-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Deploy CI
+        run: ./builder.bash deploy-ci
