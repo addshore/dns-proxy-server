@@ -4,7 +4,6 @@ set -e
 
 CUR_DIR=`pwd`
 APP_VERSION=$(cat VERSION)
-REPO_URL=mageddo/dns-proxy-server
 
 
 assemble(){
