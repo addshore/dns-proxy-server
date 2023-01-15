@@ -38,8 +38,9 @@ case $1 in
 
 	upload-release )
 
-		DESC=$(cat RELEASE-NOTES.md | awk 'BEGIN {RS="|"} {print substr($0, 0, index(substr($0, 3), "###"))}' | sed ':a;N;$!ba;s/\n/\\r\\n/g')
-		github-cli release mageddo dns-proxy-server $APP_VERSION $CURRENT_BRANCH "${DESC}" $PWD/build/*.tgz
+		echo "> Uploading release is currently DISABLED ;)"
+		#DESC=$(cat RELEASE-NOTES.md | awk 'BEGIN {RS="|"} {print substr($0, 0, index(substr($0, 3), "###"))}' | sed ':a;N;$!ba;s/\n/\\r\\n/g')
+		#github-cli release mageddo dns-proxy-server $APP_VERSION $CURRENT_BRANCH "${DESC}" $PWD/build/*.tgz
 
 	;;
 
@@ -118,9 +119,11 @@ case $1 in
 	elif [ "$EC" -ne "0" ]; then
 		exit $EC
 	fi
-	docker-compose build prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64 &&\
-	echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&\
-	docker-compose push prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
+	docker-compose build prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
+# Comment out the push, we only want build for now
+#	docker-compose build prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64 &&\
+#	echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&\
+#	docker-compose push prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
 
 	;;
 
