@@ -1,0 +1,17 @@
+name: Test
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Validate Release
+        run: builder.bash validate-release
+      - name: Build
+        run: builder.bash build
