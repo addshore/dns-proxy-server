@@ -12,6 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Validate Release
-        run: builder.bash validate-release
+        run: ./builder.bash validate-release
       - name: Build
-        run: builder.bash build
+        run: ./builder.bash build
