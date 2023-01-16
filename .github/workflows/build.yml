@@ -6,6 +6,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Explain
+        run: |
+          echo "This workflow will build the code and images for pull requests, making sure it correctly builds."
       - name: Checkout code
         uses: actions/checkout@v3
 
