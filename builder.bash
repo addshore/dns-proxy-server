@@ -110,7 +110,6 @@ case $1 in
 
 	push-ci )
 
-	echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&\
 	docker-compose push prod-build-image-dps prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
 
 	;;
