@@ -103,11 +103,15 @@ case $1 in
 	elif [ "$EC" -ne "0" ]; then
 		exit $EC
 	fi
-	docker-compose build prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
-# Comment out the push, we only want build for now
-#	docker-compose build prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64 &&\
-#	echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&\
-#	docker-compose push prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
+
+	docker-compose build prod-build-image-dps prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
+
+	;;
+
+	push-ci )
+
+	echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&\
+	docker-compose push prod-build-image-dps prod-build-image-dps-arm7x86 prod-build-image-dps-arm8x64
 
 	;;
 

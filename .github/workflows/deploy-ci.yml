@@ -13,3 +13,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Deploy CI
         run: ./builder.bash deploy-ci
+      - name: List images
+        run: docker images
+      - name: Push CI
+        if: github.ref == 'refs/heads/master'
+        run: ./builder.bash push-ci
