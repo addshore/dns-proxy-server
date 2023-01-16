@@ -1,4 +1,4 @@
-name: Push latest
+name: Push tagged
 on:
   push:
     tags:
