@@ -1,3 +1,6 @@
+### latest (unreleased)
+* Added `-resolv-setup-sleep` flag to alter sleep for resolv.conf setup 
+
 ### 2.19.0
 * Support for absolute paths on config files (#188)
 
