@@ -74,15 +74,6 @@ case $1 in
 		tar --exclude=*.tgz -czf $TAR_FILE *
 	;;
 
-	validate-release )
-
-		if git rev-parse "$APP_VERSION^{}" >/dev/null 2>&1; then
-			echo "> Version already exists $APP_VERSION"
-			exit 3
-		fi
-
-	;;
-
 	deploy-ci )
 
 	EC=0
@@ -100,7 +91,7 @@ case $1 in
 	release )
 
 		echo "> building new version"
-		builder.bash validate-release && builder.bash build
+		builder.bash build
 
 	;;
 
