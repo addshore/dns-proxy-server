@@ -40,14 +40,6 @@ case $1 in
 
 	;;
 
-	apply-version )
-
-		# updating files version
-		sed -i -E "s/(dns-proxy-server.*)[0-9]+\.[0-9]+\.[0-9]+/\1$APP_VERSION/" docker-compose.yml
-		sed -i -E "s/[0-9]+\.[0-9]+\.[0-9]+/$APP_VERSION/g" Dockerfile*.hub
-
-	;;
-
 	assemble )
 		assemble
 	;;
@@ -111,7 +103,7 @@ case $1 in
 	release )
 
 		echo "> building new version"
-		builder.bash validate-release && builder.bash apply-version && builder.bash build
+		builder.bash validate-release && builder.bash build
 
 	;;
 
