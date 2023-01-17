@@ -21,6 +21,7 @@ assemble(){
 
 generateDocs(){
 	rm -r ${TARGET} || echo "not exists ${TARGET}"
+	mkdir ${TARGET}
 	hugo --baseURL=http://mageddo.github.io/dns-proxy-server/$1 \
 	--destination $2 \
 	--ignoreCache --source docs/
@@ -31,11 +32,7 @@ case $1 in
 	docs )
 
 	VERSION=$(cat VERSION | awk -F '.' '{ print $1"."$2}');
-	TARGET=$PWD/../dns-proxy-server-docs/${VERSION}
-	generateDocs ${VERSION} ${TARGET}
-
-	VERSION=latest
-	TARGET=$PWD/../dns-proxy-server-docs/${VERSION}
+	TARGET=$PWD/.docs
 	generateDocs ${VERSION} ${TARGET}
 
 	;;

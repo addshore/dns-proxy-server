@@ -81,8 +81,6 @@ services:
     command: bash -c "builder.bash release"
     environment:
       - REPO_TOKEN=$REPO_TOKEN # github token to deploy the binary
-    volumes:
-      - $HOME/.gitconfig:/root/.gitconfig
 
 networks:
   dps:
