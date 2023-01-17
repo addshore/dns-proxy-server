@@ -39,3 +39,21 @@ jobs:
           docker push addshore/dns-proxy-server:${{ github.ref_name }}
           docker push addshore/dns-proxy-server:${{ github.ref_name }}-arm7x86
           docker push addshore/dns-proxy-server:${{ github.ref_name }}-arm8x64
+
+      - name: Extract changelog entry
+        uses: kemayo/actions-recent-changelog@v1
+        with:
+          input: RELEASE_NOTES.md
+          output: RECENT_CHANGES.md
+      - name: Output RECENT_CHANGES.md
+        run: cat ./RECENT_CHANGES.md
+
+      - name: Github release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: RECENT_CHANGES.md
+          files: |
+            build/dns-proxy-server-linux-386-${{ github.ref_name }}.tgz
+            build/dns-proxy-server-linux-amd64-${{ github.ref_name }}.tgz
+            build/dns-proxy-server-linux-arm-${{ github.ref_name }}.tgz
+            build/dns-proxy-server-linux-arm64-${{ github.ref_name }}.tgz
