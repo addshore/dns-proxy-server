@@ -157,7 +157,3 @@ func DpsNetworkAutoConnect() bool {
 	}
 	return flags.DpsNetworkAutoConnect()
 }
-
-func GetResolvSetupSleepSecond() int {
-    return *flags.ResolvSetupSleepSecond
-}
