@@ -32,17 +32,18 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
+	"net"
 	"os"
 	"os/signal"
 	"runtime/pprof"
 	"strings"
 	"syscall"
-	"github.com/miekg/dns"
-	"net"
-	"errors"
+
 	"github.com/mageddo/go-logging"
+	"github.com/miekg/dns"
 )
 
 var (
@@ -63,7 +64,7 @@ func handleReflect(respWriter dns.ResponseWriter, reqMsg *dns.Msg) {
 	var questionName string
 	if len(reqMsg.Question) != 0 {
 		questionName = reqMsg.Question[0].Name
-	}	else {
+	} else {
 		questionName = "null"
 	}
 
@@ -72,7 +73,6 @@ func handleReflect(respWriter dns.ResponseWriter, reqMsg *dns.Msg) {
 	resp := SolveName(questionName)
 	resp.SetReply(reqMsg)
 	resp.Compress = *compress
-
 
 	var firstAnswer dns.RR
 	if len(resp.Answer) != 0 {
@@ -128,32 +128,30 @@ func main2() {
 	fmt.Printf("Signal (%s) received, stopping\n", s)
 }
 
-
 // reference https://miek.nl/2014/August/16/go-dns-package/
 func SolveName(hostname string) *dns.Msg {
 
-
-	//config, _ := dns.ClientConfigFromFile("/etc/resolv.conf")		
+	//config, _ := dns.ClientConfigFromFile("/etc/resolv.conf")
 	c := new(dns.Client)
 
 	m := new(dns.Msg)
-	m.SetQuestion(dns.Fqdn(hostname), dns.TypeA) // CAN BE A, AAA, MX, etc.		
+	m.SetQuestion(dns.Fqdn(hostname), dns.TypeA) // CAN BE A, AAA, MX, etc.
 	m.RecursionDesired = true
 
-	//r, _, err := c.Exchange(m, net.JoinHostPort(config.Servers[0], config.Port)) // server and port to ask		
-	r, _, err := c.Exchange(m, net.JoinHostPort("8.8.8.8", "53")) // server and port to ask		
+	//r, _, err := c.Exchange(m, net.JoinHostPort(config.Servers[0], config.Port)) // server and port to ask
+	r, _, err := c.Exchange(m, net.JoinHostPort("8.8.8.8", "53")) // server and port to ask
 
-	// if the answer not be returned		
+	// if the answer not be returned
 	if r == nil {
 		panic(err)
 	}
 
-	// what the code of the return message ?		
+	// what the code of the return message ?
 	if r.Rcode != dns.RcodeSuccess {
 		panic(errors.New(fmt.Sprintf(" *** invalid answer name %s after MX query for %s", hostname, hostname)))
 	}
 
-	// looping through the anwsers		
+	// looping through the anwsers
 	return r
 
 }

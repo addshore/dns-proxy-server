@@ -1,16 +1,19 @@
 package proxy
 
 import (
-	"github.com/mageddo/dns-proxy-server/events/local/localvo"
-	"github.com/miekg/dns"
-	"net"
 	"errors"
 	"fmt"
-	"golang.org/x/net/context"
-	"github.com/mageddo/dns-proxy-server/events/local"
-	"github.com/mageddo/go-logging"
+	"net"
 	"reflect"
 	"strconv"
+	"time"
+
+	"github.com/mageddo/dns-proxy-server/conf"
+	"github.com/mageddo/dns-proxy-server/events/local"
+	"github.com/mageddo/dns-proxy-server/events/local/localvo"
+	"github.com/mageddo/go-logging"
+	"github.com/miekg/dns"
+	"golang.org/x/net/context"
 
 	"github.com/mageddo/dns-proxy-server/cache/store"
 )
@@ -25,6 +28,7 @@ type remoteDnsSolver struct {
 func (r remoteDnsSolver) Solve(ctx context.Context, question dns.Question) (*dns.Msg, error) {
 	c := store.GetInstance()
 	client := new(dns.Client)
+	client.Timeout = time.Duration(conf.GetRemoteDNSSolverTimeoutMiliSecond()) * time.Millisecond
 	m := new(dns.Msg)
 	m.SetQuestion(dns.Fqdn(question.Name), question.Qtype) // CAN BE A, AAA, MX, etc.
 	m.RecursionDesired = true

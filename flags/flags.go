@@ -2,23 +2,24 @@ package flags
 
 import (
 	"flag"
-	"os"
 	"fmt"
+	"os"
+
 	"github.com/mageddo/dns-proxy-server/cache/store"
 )
 
 const TEST_MODE = "TEST_MODE"
 
 var (
-	version = "dev" // will be populated by the compiler when generate the release or by this program reading VERSION file
-	Cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
-	Compress = flag.Bool("compress", false, "compress replies")
-	Tsig = flag.String("tsig", "", "use MD5 hmac tsig: keyname:base64")
-	WebServerPort = flag.Int("web-server-port", 5380, "The web server port")
-	DnsServerPort = flag.Int("server-port", 53, "The DNS server to start into")
+	version         = "dev" // will be populated by the compiler when generate the release or by this program reading VERSION file
+	Cpuprofile      = flag.String("cpuprofile", "", "write cpu profile to file")
+	Compress        = flag.Bool("compress", false, "compress replies")
+	Tsig            = flag.String("tsig", "", "use MD5 hmac tsig: keyname:base64")
+	WebServerPort   = flag.Int("web-server-port", 5380, "The web server port")
+	DnsServerPort   = flag.Int("server-port", 53, "The DNS server to start into")
 	SetupResolvconf = flag.Bool("default-dns", true, "This DNS server will be the default server for this machine")
-	ConfPath = flag.String("conf-path", "conf/config.json", "The config file path ")
-	SetupService = flag.String("service", "", `Setup as service, starting with machine at boot
+	ConfPath        = flag.String("conf-path", "conf/config.json", "The config file path ")
+	SetupService    = flag.String("service", "", `Setup as service, starting with machine at boot
 		docker = start as docker service,
 		normal = start as normal service,
 		uninstall = uninstall the service from machine `)
@@ -32,10 +33,11 @@ var (
 	dpsNetwork             = flag.Bool("dps-network", false, "Create a bridge network for DPS increasing compatibility")
 	dpsNetworkAutoConnect  = flag.Bool("dps-network-auto-connect", false, "Connect all running and new containers to the DPS network, this way you will probably not have resolution issues by acl (implies dps-network=true)")
 	ResolvSetupSleepSecond = flag.Int("resolv-setup-sleep", 20, "Time to wait till next resolv.conf override")
+	RemoteDNSSolverTimeout = flag.Int("remote-dns-solver-timeout", 0, "Timeout for remote DNS solves in ms")
 	Help                   = flag.Bool("help", false, "This message")
 )
 
-func init(){
+func init() {
 
 	flag.Parse()
 	if *Help {
@@ -58,7 +60,7 @@ func GetRawCurrentVersion() string {
 
 func IsTestVersion() bool {
 	cache := store.GetInstance()
-	if !cache.ContainsKey(TEST_MODE){
+	if !cache.ContainsKey(TEST_MODE) {
 		cache.PutIfAbsent(TEST_MODE, flag.Lookup("test.v") != nil)
 	}
 	return cache.Get(TEST_MODE).(bool)
